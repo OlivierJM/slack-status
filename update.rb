@@ -30,23 +30,22 @@ def slack_update_handler
     parsed_message = message.to_json
 
     base_url = "https://slack.com/api/users.profile.set?profile=#{message}&token=#{@token}"
-    puts URI.encode_www_form_component base_url
     uri = URI.parse(base_url)
+    puts uri
     request = Net::HTTP::Post.new(uri)
-    begin
-        req_options = {use_ssl: uri.scheme == "https"}
-        response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
-          http.request(request)
-        end
+    req_options = {use_ssl: uri.scheme == "https"}
+    Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+        res = http.request(request)
+        res
+    end
     rescue => exception
         puts exception
-    ensure
-        puts "done"
-    end
 end
 
 def update_slack
     speed = check_speed
+    slack_update_handler if speed.to_i < 1
+
     puts speed
 end
 
