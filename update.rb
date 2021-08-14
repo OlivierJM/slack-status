@@ -6,13 +6,15 @@ require 'open-uri'
 require 'selenium-webdriver'
 
 @driver = Selenium::WebDriver.for :chrome
-@wait = Selenium::WebDriver::Wait.new(timeout: 90)
+@wait = Selenium::WebDriver::Wait.new(timeout: 90) # avoid selenium to quit too soon before the test is done running
 @token = ENV['SLACK_TOKEN']
 
 
+# uses fast.com to check for internet speed
 def check_speed
     begin
       @driver.get 'https://fast.com'
+      #  here we wait until the speed test is done then we grab the speed and close the browser
       first_result = @wait.until { @driver.find_element(css: '#speed-value.succeeded') }
       speed = first_result.attribute('textContent')
       speed
@@ -22,6 +24,7 @@ def check_speed
 end
 
 
+# This attempts to update slack status that you are having a bad day
 def slack_update_handler
     message = {
         "status_text":'Currently facing a bad internet',
