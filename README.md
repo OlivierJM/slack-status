@@ -9,7 +9,7 @@ Being in places where Internet connectivity is not always assured, it comes and 
 
 Features:
 - check internet speed using fast.com
-- if it is low (< 1) update slack status
+- if it is low (`< 1mbps`) update slack status
 
 Requirements:
 - Selenium webdriver
@@ -23,3 +23,4 @@ Possible usage:
 TODO:
 - Refactor the code to remove the "@"
 - Use a headless browser - urgent
+- If the internet is above 1mbps it should clear the status
