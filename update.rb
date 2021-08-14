@@ -1,32 +1,53 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
 require 'json'
 require 'net/http'
 require 'open-uri'
-require 'watir'
 require 'selenium-webdriver'
 
-driver = Selenium::WebDriver.for :chrome
-wait = Selenium::WebDriver::Wait.new(timeout: 90)
+@driver = Selenium::WebDriver.for :chrome
+@wait = Selenium::WebDriver::Wait.new(timeout: 90)
+@token = ENV['SLACK_TOKEN']
 
-# message = ""
+
 def check_speed
     begin
-      driver.get 'https://fast.com'
-      first_result = wait.until { driver.find_element(css: '#speed-value.succeeded') }
+      @driver.get 'https://fast.com'
+      first_result = @wait.until { @driver.find_element(css: '#speed-value.succeeded') }
       speed = first_result.attribute('textContent')
-      puts speed
+      speed
     ensure
-      driver.quit
+      @driver.quit
     end
 end
 
 
+def slack_update_handler
+    message = {
+        "status_text":'Currently facing a bad internet',
+        "status_emoji":':cry:'
+    }
+    parsed_message = message.to_json
+
+    base_url = "https://slack.com/api/users.profile.set?profile=#{message}&token=#{@token}"
+    puts URI.encode_www_form_component base_url
+    uri = URI.parse(base_url)
+    request = Net::HTTP::Post.new(uri)
+    begin
+        req_options = {use_ssl: uri.scheme == "https"}
+        response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+          http.request(request)
+        end
+    rescue => exception
+        puts exception
+    ensure
+        puts "done"
+    end
+end
+
 def update_slack
-
+    speed = check_speed
+    puts speed
 end
 
-def update_github
-
-end
+update_slack
