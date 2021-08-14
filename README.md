@@ -4,8 +4,9 @@
 <!-- Install selenium webdriver -->
 <!-- make sure it is in your path -->
 <!-- get slack auth token -->
-Inspiration:
-Being in places where Internet connectivity is not always assured, it comes and goes, it is a good practive for your team to know your current status
+__Inspiration:__  
+
+Being in places where Internet connectivity is not always assured, it comes and goes, it is a good practice for your team to know your current status, this attemps to do that with less of your effort
 
 Features:
 - check internet speed using fast.com
